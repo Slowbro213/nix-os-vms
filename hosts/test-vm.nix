@@ -1,12 +1,19 @@
 { inputs, config, pkgs, lib, ... }:
 
 let
-  servicesDir = ../modules/backends;
-  serviceFiles =
+  backendServicesDir = ../modules/backends;
+  backendServiceFiles =
     builtins.filter (f: lib.hasSuffix ".nix" f)
-      (builtins.attrNames (builtins.readDir servicesDir));
-  serviceImports =
-    map (f: servicesDir + ("/" + f)) serviceFiles;
+      (builtins.attrNames (builtins.readDir backendServicesDir));
+  backendServiceImports =
+    map (f: backendServicesDir + ("/" + f)) backendServiceFiles;
+
+  serviceModulesDir = ../modules/services;
+  serviceModuleFiles =
+    builtins.filter (f: lib.hasSuffix ".nix" f)
+      (builtins.attrNames (builtins.readDir serviceModulesDir));
+  serviceModuleImports =
+    map (f: serviceModulesDir + ("/" + f)) serviceModuleFiles;
 in
 {
   imports =
@@ -21,7 +28,8 @@ in
 
       ../disko/layout.nix
     ]
-    ++ serviceImports;
+    ++ backendServiceImports
+    ++ serviceModuleImports;
 
   networking.hostName = "test-vm";
   time.timeZone = "Europe/Tirane";
@@ -30,4 +38,3 @@ in
   boot.loader.grub.devices = lib.mkForce [ "/dev/sda" ];
   system.stateVersion = "26.05";
 }
-
