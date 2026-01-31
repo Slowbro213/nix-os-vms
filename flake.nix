@@ -7,6 +7,10 @@
     #secrets
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    #backends
+    test-backend-main.url = "github:Slowbro213/c-backend?ref=main";
+    test-backend-main.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, disko, ... }@inputs:
@@ -24,7 +28,7 @@
         ];
       };
 
-    # This is the system you run `nix run` on (your laptop/host machine)
+    # This is the system you run `nix run`
     controlSystem = "x86_64-linux";
     pkgs = import nixpkgs { system = controlSystem; };
 
@@ -43,10 +47,13 @@
         fi
 
         echo "==> Deploy $name -> $user@$addr"
+        ssh "$user@$addr" 'install -d -m 0700 /var/lib/sops-nix'
+        scp /var/lib/sops-nix/key.txt "$user@$addr:/var/lib/sops-nix/key.txt"
+        ssh "$user@$addr" 'chmod 0600 /var/lib/sops-nix/key.txt && chown root:root /var/lib/sops-nix/key.txt'
+
         nixos-rebuild switch \
           --flake ${self}#"$name" \
           --target-host "$user@$addr" \
-          --use-remote-sudo \
           "''${@:4}"
       }
 
@@ -59,7 +66,6 @@
       echo "==> Done"
     '';
 
-    # Optional: install-all via nixos-anywhere too
     installAllScript = pkgs.writeShellScript "install-all" ''
       set -euo pipefail
 

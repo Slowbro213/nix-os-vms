@@ -39,7 +39,50 @@
     "root": {
       "inputs": {
         "disko": "disko",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "sops-nix": "sops-nix",
+        "test-backend-main": "test-backend-main"
+      }
+    },
+    "sops-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769469829,
+        "narHash": "sha256-wFcr32ZqspCxk4+FvIxIL0AZktRs6DuF8oOsLt59YBU=",
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "rev": "c5eebd4eb2e3372fe12a8d70a248a6ee9dd02eff",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "type": "github"
+      }
+    },
+    "test-backend-main": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769864872,
+        "narHash": "sha256-qoVsn1I5mAHtoliUCuN2KOirasxJgwhes8xhC2zu5TY=",
+        "owner": "Slowbro213",
+        "repo": "c-backend",
+        "rev": "a853cd243176fe59e5af2742d1f928ee528bf6b3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Slowbro213",
+        "ref": "main",
+        "repo": "c-backend",
+        "type": "github"
       }
     }
   },

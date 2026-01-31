@@ -1,7 +1,7 @@
 {
   test-vm = {
     system = "x86_64-linux";
-    address = "192.168.1.10";
+    address = "192.168.1.21";
     sshUser = "root";
   };
 
