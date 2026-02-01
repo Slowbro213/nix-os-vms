@@ -5,9 +5,15 @@
 
   services.prometheus.exporters.node = {
     enable = true;
-    openFirewall = true;
     port = 9100;
-    enabledCollectors = [ "systemd" ];
+    enabledCollectors = [ 
+      "systemd"
+      "cpu"
+      "meminfo"
+      "filesystem"
+      "loadavg"
+      "netdev"
+    ];
   };
 
   #SSH
