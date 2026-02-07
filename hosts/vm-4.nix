@@ -1,39 +1,18 @@
 { inputs, config, pkgs, lib, ... }:
 
-let
-  backendsDir = ../modules/backends;
-  backendFiles =
-    builtins.filter (f: lib.hasSuffix ".nix" f)
-      (builtins.attrNames (builtins.readDir backendsDir));
-  backendImports =
-    map (f: backendsDir + ("/" + f)) backendFiles;
-
-  
-  servicesDir = ../modules/services;
-  serviceFiles =
-    builtins.filter (f: lib.hasSuffix ".nix" f)
-      (builtins.attrNames (builtins.readDir servicesDir));
-  serviceImports =
-    map (f: servicesDir + ("/" + f))
-      (lib.sort lib.lessThan serviceFiles);
-in
 {
   imports =
     [
       ../modules/base.nix
       ../modules/secrets.nix
 
-      ../modules/backends.nix
-
       inputs.disko.nixosModules.disko
       inputs.sops-nix.nixosModules.sops
 
       ../disko/layout.nix
-    ]
-    ++ serviceImports
-    ++ backendImports;
+    ];
 
-  networking.hostName = "test-vm";
+  networking.hostName = "vm-4";
   time.timeZone = "Europe/Tirane";
 
   networking.firewall = {
@@ -62,4 +41,6 @@ in
   boot.loader.grub.devices = lib.mkForce [ "/dev/sda" ];
   system.stateVersion = "26.05";
 }
+
+
 

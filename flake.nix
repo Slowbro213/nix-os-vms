@@ -24,9 +24,16 @@
         system = hostMeta.system;
         specialArgs = { inherit inputs hostMeta; };
         modules = [
+          # allow only consul (unfree)
+          ({ lib, ... }: {
+            nixpkgs.config.allowUnfreePredicate = pkg:
+              builtins.elem (lib.getName pkg) [ "consul" ];
+          })
+
           ./hosts/${name}.nix
         ];
       };
+
 
     # This is the system you run `nix run`
     controlSystem = "x86_64-linux";

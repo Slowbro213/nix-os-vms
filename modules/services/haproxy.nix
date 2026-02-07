@@ -19,7 +19,6 @@
 
       frontend fe_http
         bind 0.0.0.0:80
-        # If you also want IPv6:
         # bind :::80
 
         # Route by Host header
@@ -28,12 +27,14 @@
         acl host_loki       hdr(host) -i loki.test-vm
         acl host_garage     hdr(host) -i garage.test-vm
         acl host_backend    hdr(host) -i backend.test-vm
+        acl host_consul     hdr(host) -i consul.test-vm
 
         use_backend be_grafana    if host_grafana
         use_backend be_prometheus if host_prometheus
         use_backend be_loki       if host_loki
         use_backend be_garage     if host_garage
         use_backend be_backend    if host_backend
+        use_backend be_consul     if host_consul
 
         # Default: send to Grafana (or pick what you want)
         default_backend be_grafana
@@ -53,10 +54,13 @@
 
       backend be_backend
         server s1 127.0.0.1:8080 check
+
+      # Consul UI / HTTP API
+      backend be_consul
+        server s1 127.0.0.1:8500 check
     '';
   };
 
   systemd.services.haproxy.after = [ "network-online.target" ];
   systemd.services.haproxy.wants = [ "network-online.target" ];
 }
-
