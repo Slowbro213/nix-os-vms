@@ -25,6 +25,8 @@
       80  # HAProxy HTTP entrypoint
       8500
       3901
+      9100
+      9090
       # 443 # if/when you add TLS termination
     ];
   };

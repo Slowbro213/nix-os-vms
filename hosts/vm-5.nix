@@ -21,6 +21,8 @@
     allowedTCPPorts = [
       22  # SSH
       80  # HAProxy HTTP entrypoint
+      9100
+      9090
       # 443 # if/when you add TLS termination
     ];
   };

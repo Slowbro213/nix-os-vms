@@ -22,7 +22,7 @@
     mkHost = name: hostMeta:
       lib.nixosSystem {
         system = hostMeta.system;
-        specialArgs = { inherit inputs hostMeta; };
+        specialArgs = { inherit inputs hostMeta inventory; };
         modules = [
           # allow only consul (unfree)
           ({ lib, ... }: {

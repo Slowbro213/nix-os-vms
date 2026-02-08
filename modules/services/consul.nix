@@ -1,9 +1,15 @@
-{ config, lib, pkgs, hostMeta, ... }:
+{ config, lib, pkgs, hostMeta, inventory, ... }:
 
 let
   nodeName = config.networking.hostName;
 
-  serverAddrs = [ "192.168.1.44" "192.168.1.45" "192.168.1.46" ];
+  clusterHosts = [ "vm-1" "vm-2" "vm-3" ];
+
+  clusterInventory =
+    lib.filterAttrs (name: _: builtins.elem name clusterHosts) inventory;
+
+  serverAddrs =
+    lib.mapAttrsToList (_: m: m.address) clusterInventory;
 in
 {
   services.consul = {

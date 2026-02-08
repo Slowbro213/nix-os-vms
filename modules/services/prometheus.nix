@@ -1,5 +1,8 @@
-{ ... }:
+{ config, lib, inventory, ... }:
 
+let
+  targets = lib.mapAttrsToList (_: m: "${m.address}:9100") inventory;
+in
 {
   services.prometheus = {
     enable = true;
@@ -9,7 +12,7 @@
       {
         job_name = "node";
         static_configs = [
-          { targets = [ "127.0.0.1:9100" ]; }
+          { targets = targets; }
         ];
       }
     ];

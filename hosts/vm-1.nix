@@ -24,6 +24,7 @@ in
       ../modules/secrets.nix
 
       ../modules/backends.nix
+      ../modules/garage-coordinator.nix
 
       inputs.disko.nixosModules.disko
       inputs.sops-nix.nixosModules.sops
@@ -44,6 +45,8 @@ in
       80  # HAProxy HTTP entrypoint
       8500
       3901
+      9100
+      9090
       # 443 # if/when you add TLS termination
     ];
   };
