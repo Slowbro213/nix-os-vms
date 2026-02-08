@@ -12,7 +12,7 @@
     db_engine = "fjall"
     metadata_auto_snapshot_interval = "6h"
 
-    replication_factor = 3
+    replication_factor = 2
 
     compression_level = 2
 

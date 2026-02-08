@@ -44,6 +44,7 @@ in
       22  # SSH
       80  # HAProxy HTTP entrypoint
       8500
+      3900
       3901
       9100
       9090
