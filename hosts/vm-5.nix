@@ -6,6 +6,8 @@
       ../modules/base.nix
       ../modules/secrets.nix
 
+      ../modules/lb.nix
+
       inputs.disko.nixosModules.disko
       inputs.sops-nix.nixosModules.sops
 
@@ -14,19 +16,6 @@
 
   networking.hostName = "vm-5";
   time.timeZone = "Europe/Tirane";
-
-  networking.firewall = {
-    enable = true;
-
-    allowedTCPPorts = [
-      22  # SSH
-      80  # HAProxy HTTP entrypoint
-      3901
-      9100
-      9090
-      # 443 # if/when you add TLS termination
-    ];
-  };
 
   boot.kernel.sysctl = {
     "net.core.somaxconn" = 8192;

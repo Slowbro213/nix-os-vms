@@ -1,6 +1,12 @@
 { config, pkgs, lib, ... }:
 
 {
+
+  imports =
+    [
+      ../modules/services/promtail.nix
+    ];
+
   environment.systemPackages = with pkgs; [ git vim ];
 
   services.prometheus.exporters.node = {
@@ -13,6 +19,22 @@
       "filesystem"
       "loadavg"
       "netdev"
+    ];
+  };
+
+  networking.firewall = {
+    enable = true;
+
+    allowedTCPPorts = [
+      22
+      80
+      3000
+      8500
+      3900
+      3901
+      9100
+      9090
+      # 443 # if/when you add TLS termination
     ];
   };
 
