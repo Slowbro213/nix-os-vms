@@ -1,10 +1,18 @@
-{ config, pkgs, lib, inventory, ... }:
+{ config, pkgs, lib, inventory, hostMeta, ... }:
 
 let
   vip = "192.168.1.100";
   routerId = 51;
 
-  iface = config.networking.primaryInterface or "eth0";
+  matches =
+    lib.attrNames (lib.filterAttrs (_if: cfg:
+      builtins.any (a: a.address == hostMeta.address) (cfg.ipv4.addresses or [])
+      || builtins.any (a: a.address == hostMeta.address) (cfg.ipv6.addresses or [])
+    ) config.networking.interfaces);
+
+  iface =
+    if matches != [] then lib.head matches
+    else (config.networking.primaryInterface or "enp0s3");
 
   hasRole = role: host:
     let roles = host.roles or [];

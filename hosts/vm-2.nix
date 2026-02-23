@@ -5,7 +5,6 @@
     [
       ../modules/base.nix
       ../modules/secrets.nix
-      ../modules/services/consul.nix
       ../modules/services/garage.nix
 
       inputs.disko.nixosModules.disko

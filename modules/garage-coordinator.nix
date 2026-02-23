@@ -25,6 +25,7 @@ in {
       Type = "oneshot";
       User = "garage";
       Group = "garage";
+      SuccessExitStatus = [ "75" ];
 
       Environment = [
         "GARAGE_RPC_SECRET_FILE=${config.sops.secrets."garage/rpc_secret".path}"
@@ -47,7 +48,7 @@ in {
         ${pkgs.jq}/bin/jq -r 'to_entries[] | "\(.key) \(.value.zone) \(.value.capacity)"' "$DESIRED" \
         | while read -r addr zone cap; do
             line="$(printf "%s\n" "$STATUS" | grep -F "$addr" || true)"
-            [ -n "$line" ] || { echo "addr $addr not found in cluster status yet"; exit 1; }
+            [ -n "$line" ] || { echo "addr $addr not found in cluster status yet"; exit 75; }
 
             nodeid="$(echo "$line" | grep -Eo '^[0-9a-f]{16}' | head -n1)"
             [ -n "$nodeid" ] || { echo "could not parse node id from: $line"; exit 1; }

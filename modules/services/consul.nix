@@ -3,18 +3,23 @@
 let
   nodeName = config.networking.hostName;
 
-  clusterHosts = [ "vm-1" "vm-2" "vm-3" ];
+  hasRole = role: host:
+    builtins.elem role (host.roles or []);
 
-  clusterInventory =
-    lib.filterAttrs (name: _: builtins.elem name clusterHosts) inventory;
+  # All inventory entries that have the "consul" role
+  consulInventory =
+    lib.filterAttrs (_name: host: hasRole "consul" host) inventory;
 
-  serverAddrs =
-    lib.mapAttrsToList (_: m: m.address) clusterInventory;
+  # Addresses of consul servers
+  consulServerAddrs =
+    lib.mapAttrsToList (_name: host: host.address) consulInventory;
+
+  isConsulServer = hasRole "consul" (inventory.${nodeName} or {});
+  bootstrapExpect = builtins.length consulServerAddrs;
 in
 {
   services.consul = {
     enable = true;
-
     webUi = true;
 
     extraConfig = {
@@ -25,13 +30,13 @@ in
       advertise_addr = hostMeta.address;
       client_addr = "0.0.0.0";
 
-      server = true;
-      bootstrap_expect = 3;
+      server = isConsulServer;
 
-      retry_join = serverAddrs;
+      bootstrap_expect = bootstrapExpect;
+
+      retry_join = consulServerAddrs;
 
       data_dir = "/var/lib/consul";
-
       enable_script_checks = false;
     };
   };
@@ -43,4 +48,3 @@ in
     8301 8302 8600
   ];
 }
-

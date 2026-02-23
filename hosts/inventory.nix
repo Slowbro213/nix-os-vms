@@ -1,16 +1,16 @@
 {
   vm-1 = {
     system = "x86_64-linux";
-    address = "192.168.1.60";
+    address = "192.168.1.81";
     capacity = "20G";
     zone = "dc1";
     sshUser = "root";
 
-    roles = [ "garage" "logging"];
+    roles = [ "garage" "logging" "consul"];
   };
   vm-2 = {
     system = "x86_64-linux";
-    address = "192.168.1.61";
+    address = "192.168.1.82";
     capacity = "20G";
     zone = "dc2";
     sshUser = "root";
@@ -19,7 +19,7 @@
   };
   vm-3 = {
     system = "x86_64-linux";
-    address = "192.168.1.62";
+    address = "192.168.1.83";
     capacity = "20G";
     zone = "dc3";
     sshUser = "root";
@@ -28,7 +28,7 @@
   };
   vm-4 = {
     system = "x86_64-linux";
-    address = "192.168.1.63";
+    address = "192.168.1.84";
     capacity = "20G";
     zone = "dc1";
     sshUser = "root";
@@ -37,7 +37,7 @@
   };
   vm-5 = {
     system = "x86_64-linux";
-    address = "192.168.1.64";
+    address = "192.168.1.85";
     capacity = "20G";
     zone = "dc1";
     sshUser = "root";

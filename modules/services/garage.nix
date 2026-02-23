@@ -1,5 +1,17 @@
-{ config, pkgs, hostMeta, ... }:
+{ config, pkgs, lib, hostMeta, inventory, ... }:
 
+let
+  hasRole = role: host: builtins.elem role (host.roles or []);
+  invList = lib.mapAttrsToList (name: host: { inherit name host; }) inventory;
+
+  consulNodes = builtins.filter (x: hasRole "consul" x.host) invList;
+
+  _ = lib.assertMsg (builtins.length consulNodes == 1)
+    "Expected exactly 1 consul node, found ${toString (builtins.length consulNodes)}";
+
+  consulNode = lib.head consulNodes;
+  consulHttpAddr = "http://${consulNode.host.address}:8500";
+in
 {
   sops.secrets."garage/rpc_secret"    = { owner = "garage"; group = "garage"; mode = "0400"; };
   sops.secrets."garage/admin_token"   = { owner = "garage"; group = "garage"; mode = "0400"; };
@@ -34,7 +46,7 @@
 
     [consul_discovery]
     api = "agent"
-    consul_http_addr = "http://127.0.0.1:8500"
+    consul_http_addr = "${consulHttpAddr}"
 
     # tls_skip_verify = false
 
@@ -66,6 +78,10 @@
         "GARAGE_RPC_SECRET_FILE=${config.sops.secrets."garage/rpc_secret".path}"
         "GARAGE_ADMIN_TOKEN_FILE=${config.sops.secrets."garage/admin_token".path}"
         "GARAGE_METRICS_TOKEN_FILE=${config.sops.secrets."garage/metrics_token".path}"
+      ];
+
+      restartTriggers = [
+        config.environment.etc."garage/garage.toml".source
       ];
 
       User = "garage";
